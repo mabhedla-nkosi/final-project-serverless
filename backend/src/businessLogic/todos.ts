@@ -25,6 +25,12 @@ export async function createTodo(createTodoRequest: CreateTodoRequest, jwtToken:
     const userId = parseUserId(jwtToken)
     const todoId =  uuidv4()
     const bucketName = process.env.IMAGES_S3_BUCKET
+
+    if(createTodoRequest.name.length===0){
+        throw new Error("Name should be not empty.")
+    }else if(!createTodoRequest.dueDate){
+        throw new Error("Date should be not empty.")
+    }
     
     return toDoAccess.createTodo({
         userId: userId,
@@ -39,6 +45,11 @@ export async function createTodo(createTodoRequest: CreateTodoRequest, jwtToken:
 export async function updateTodo(updateTodoRequest: UpdateTodoRequest, todoId: string, jwtToken: string): Promise<TodoUpdate> {
     logger.info('Update todo')
     const userId = parseUserId(jwtToken);
+    if(updateTodoRequest.name.length===0){
+        throw new Error("Name should be not empty.")
+    }else if(!updateTodoRequest.dueDate){
+        throw new Error("Date should be not empty.")
+    }
     return toDoAccess.updateTodo(updateTodoRequest, todoId, userId)
 }
 
